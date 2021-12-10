@@ -8,14 +8,12 @@ pub fn run() {
 pub fn parse1(s: &str) -> usize {
     let inputs: Vec<u16> = s.lines().map(|line| line.parse().unwrap()).collect();
     let count = inputs.array_windows().filter(|[n1, n2]| n1 < n2).count();
-    println!("Measurements bigger than previous is {}", count);
     count
 }
 
 pub fn parse2(s: &str) -> usize {
     let inputs: Vec<u16> = s.lines().map(|line| line.parse().unwrap()).collect();
     let count = inputs.array_windows().filter(|[n1, n2, n3, n4]| n1 + n2 + n3 < n2 + n3 + n4).count();
-    println!("Measurements bigger than previous is {}", count);
     count
 }
 

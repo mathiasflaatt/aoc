@@ -17,7 +17,6 @@ pub fn parse1(s: &str) -> usize {
         }
     }
 
-    println!("Position of sub is ({}, {})", pos_x, pos_y);
     pos_x * pos_y
 }
 pub fn parse2(s: &str) -> usize {
@@ -40,7 +39,6 @@ pub fn parse2(s: &str) -> usize {
         }
     }
 
-    println!("Position of sub is ({}, {})", pos_x, pos_y);
     pos_x * pos_y
 }
 
