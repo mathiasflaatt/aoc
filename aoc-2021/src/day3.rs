@@ -1,3 +1,5 @@
+use std::usize;
+
 const INPUT: &'static str = include_str!("../inputs/3.txt");
 
 pub fn run() {
@@ -6,7 +8,7 @@ pub fn run() {
 }
 
 pub fn parse1(s: &str) -> usize {
-	let line_length =  s.lines().next().unwrap().chars().count();
+    let line_length = s.lines().next().unwrap().chars().count();
     let lines = s.lines();
     let median_number = lines.count() / 2;
     let mut counts = vec![0; line_length];
@@ -21,18 +23,40 @@ pub fn parse1(s: &str) -> usize {
     let gamma = counts
         .iter()
         .map(|count| if count >= &median_number { 1 } else { 0 })
-		.fold(0, |acc, x| (acc << 1) | x);
+        .fold(0, |acc, x| (acc << 1) | x);
 
-	let epsilon = counts
+    let epsilon = counts
         .iter()
         .map(|count| if count >= &median_number { 0 } else { 1 })
         .fold(0, |acc, x| (acc << 1) | x);
 
-		gamma * epsilon
+    gamma * epsilon
 }
 
-pub fn parse2(_s: &str) -> usize {
-    todo!()
+pub fn parse2(s: &str) -> usize {
+    let lines: Vec<&str> = s.lines().into_iter().map(|line| line).collect();
+    let byte_length: usize = lines[0].len();
+
+    let oxygen: u32 = parse_gas(lines.clone(), 0, false, byte_length);
+    let co2 = parse_gas(lines.clone(), 0, true, byte_length);
+
+    (oxygen * co2) as usize
+}
+
+fn parse_gas(input: Vec<&str>, target_index: usize, invert: bool, byte_length: usize) -> u32 {
+    if target_index < byte_length && input.len() > 1 {
+        let (zeroes, ones): (Vec<&str>, Vec<&str>) = input
+            .iter()
+            .partition(|&line| -> bool { line.chars().nth(target_index).unwrap() == '0' });
+
+        let next_iter = if (ones.len() >= zeroes.len()) ^ invert { ones } else { zeroes };
+
+        return parse_gas(next_iter, target_index + 1, invert, byte_length);
+    }
+    return input[0]
+        .chars()
+        .map(|bit| -> u32 { bit.to_digit(10).unwrap() })
+        .fold(0, |acc, number| (acc << 1) | number);
 }
 
 #[cfg(test)]
@@ -59,6 +83,6 @@ mod test {
 
     #[test]
     fn second() {
-        assert_eq!(parse2(INPUT), 0);
+        assert_eq!(parse2(INPUT), 230);
     }
 }
